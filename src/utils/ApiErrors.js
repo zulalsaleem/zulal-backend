@@ -18,3 +18,4 @@ class ApiErrors extends Error{
         Error.captureStackTrace(this,this.constructor)
     }
 }
+export {ApiErrors}
