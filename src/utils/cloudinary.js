@@ -1,3 +1,4 @@
+
 import {v2 as cloudinary} from 'cloudinary'
 import fs from "fs"
 
@@ -6,7 +7,7 @@ import fs from "fs"
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET_KEY
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 
@@ -18,8 +19,9 @@ const uploadonCloudinary =async(localfilepath) =>{
             resource_type: "auto"
         })
         // file has been successfully uploaded
-        console.log(" file has been uploaded successfully ",
-            response.url);
+        //console.log(" file has been uploaded successfully ",
+          //  response.url);
+            fs.unlinkSync(localfilepath) // remove the sve locally temporary file as upload operation got successfull
             return response;
       } catch (error) {
         fs.unlinkSync(localfilepath) // remove the sve locally temporary file as upload operation got failed 
@@ -28,3 +30,4 @@ const uploadonCloudinary =async(localfilepath) =>{
 }
 
 export{uploadonCloudinary}
+
