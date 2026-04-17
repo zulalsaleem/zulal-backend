@@ -5,6 +5,7 @@ import {User} from "../models/user.model.js";
 import {uploadonCloudinary} from "../utils/cloudinary.js";
 import { ApiResponce } from "../utils/ApiRespnce.js";
 import jwt from "jsonwebtoken";
+//import { verify } from "jsonwebtoken";
 import mongoose from "mongoose";
 
 const generateAccessAndRefreshToken =async(userId)=>{
@@ -146,8 +147,8 @@ const logoutUser =asyncHandler(async(req,res) =>{
      await User.findByIdAndUpdate(
         req.user._id,
           {
-            $set:{
-                refreshToken : undefined
+            $unset:{
+                refreshToken : 1 //this removes the document from the field 
             }
           },
           {
@@ -167,7 +168,7 @@ const logoutUser =asyncHandler(async(req,res) =>{
     )
 })
 const refreshAccessToken =asyncHandler(async(req,res) => {
-    const incomingRefreshToken =req.cookies.refreshToken || req.body.refreshToken
+    const incomingRefreshToken =req.cookies.refreshToken || req.body.refreshToken 
     if (!incomingRefreshToken) {
         throw new ApiErrors(401,"unauthorized access")  
     }
@@ -187,15 +188,14 @@ const refreshAccessToken =asyncHandler(async(req,res) => {
          httpOnly :true,
          secure :true
      }
-     const {accessToken,newrefreshToken}=await generateAccessAndRefreshToken(user._id)
+     const {accessToken,refreshToken :newRefreshToken}=await generateAccessAndRefreshToken(user._id)
      return res
      .status(200)
      .cookie("accessToken",accessToken,options)
      .cookie("refreshToken",newrefreshToken,options)
      .json(
          new ApiResponce(200,
-             {accessToken,refreshToken :newrefreshToken},
-             "access token generated successfully "
+             {accessToken,refreshToken :newRefreshToken},             "access token generated successfully "
          )
      )
    } catch (error) {
@@ -338,7 +338,7 @@ const getUserChannnelProfile=asyncHandler(async(req,res)=>{//aggregation piplini
                 },
                 isSubscribed:{
                     $cond:{
-                        if:{$in:[req.user?._id,"$subscriber.subscribers"]}, 
+                        if:{$in:[req.user?._id,"$subscribers.subscriber"]}, 
                         then:true,
                         else:false
                     }
@@ -355,7 +355,7 @@ const getUserChannnelProfile=asyncHandler(async(req,res)=>{//aggregation piplini
                 isSubscribed:1,
                 avatar:1,
                 coverImage:1,
-                email
+                email:1
             }
         }
     ]
