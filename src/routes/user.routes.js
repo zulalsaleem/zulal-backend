@@ -19,6 +19,7 @@ console.log("user routes is loaded")
 
 
 
+
 const router= Router();
 
 router.route("/register").post(
@@ -47,5 +48,9 @@ router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateU
 
 router.route("/c/:username").get(verifyJWT,getUserChannnelProfile)
 router.route("/history").get(verifyJWT,getWatchHistory)
+
+
+
+
 
 export default router

@@ -1,8 +1,8 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import {Tweet} from "../models/tweet.model.js"
 import {User} from "../models/user.model.js"
-import {ApiError} from "../utils/ApiError.js"
-import {ApiResponse} from "../utils/ApiResponse.js"
+import {ApiErrors as ApiError} from "../utils/ApiErrors.js"
+import {ApiResponce as ApiResponse} from "../utils/ApiRespnce.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 
 const createTweet = asyncHandler(async (req, res) => {
@@ -194,7 +194,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
 
 const getAllTweets = asyncHandler(async (req, res) => {
     // This is a simplified example. A real feed would have pagination
-    // and likely only show tweets from users the current user follows.
+    // and likely only show tweets from user the current user follows.
     const tweets = await Tweet.find({})
         .populate("owner", "username fullName avatar")
         .sort({ createdAt: -1 }); // Get newest tweets first

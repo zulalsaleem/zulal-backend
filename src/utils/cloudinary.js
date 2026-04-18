@@ -11,23 +11,34 @@ cloudinary.config({
 });
 
 
-const uploadonCloudinary =async(localfilepath) =>{
-      try {
+const uploadonCloudinary = async (localfilepath) => {
+    try {
         if (!localfilepath) return null
-        // upload the file on cloudinary 
-        const response = await  cloudinary.uploader.upload(localfilepath,{
+        const response = await cloudinary.uploader.upload(localfilepath, {
             resource_type: "auto"
         })
-        // file has been successfully uploaded
-        //console.log(" file has been uploaded successfully ",
-          //  response.url);
-            fs.unlinkSync(localfilepath) // remove the sve locally temporary file as upload operation got successfull
-            return response;
-      } catch (error) {
-        fs.unlinkSync(localfilepath) // remove the sve locally temporary file as upload operation got failed 
+        fs.unlinkSync(localfilepath)
+        return response;
+    } catch (error) {
+        if (fs.existsSync(localfilepath)) fs.unlinkSync(localfilepath)
         return null;
-      }
+    }
 }
 
-export{uploadonCloudinary}
+const deleteFromCloudinary = async (url) => {
+    try {
+        if (!url) return null;
+        const urlParts = url.split("/");
+        const uploadIndex = urlParts.indexOf("upload");
+        const resourceType = urlParts[uploadIndex - 1];
+        const publicIdWithExt = urlParts.slice(uploadIndex + 2).join("/");
+        const publicId = publicIdWithExt.replace(/\.[^/.]+$/, "");
+        return await cloudinary.uploader.destroy(publicId, { resource_type: resourceType });
+    } catch (error) {
+        console.error("Error deleting from Cloudinary:", error);
+        return null;
+    }
+}
+
+export { uploadonCloudinary, deleteFromCloudinary }
 

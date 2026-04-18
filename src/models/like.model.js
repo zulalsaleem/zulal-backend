@@ -1,4 +1,4 @@
-import mongoose ,{model, Schema} from "mongoose";
+import mongoose ,{Schema} from "mongoose";
 
 const LikeSchema=new mongoose.Schema({
          video:{
@@ -7,7 +7,7 @@ const LikeSchema=new mongoose.Schema({
          },
          comment:{
             type:Schema.Types.ObjectId,
-            ref:"comment"
+            ref:"Comment"
          },
          tweet:{
             type:Schema.Types.ObjectId,
