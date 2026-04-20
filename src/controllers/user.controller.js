@@ -113,7 +113,8 @@ const loginUser = asyncHandler(async (req, res) => {
     // FIX 3: secure:false on localhost so cookies actually work
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production"
+        secure: true,
+        sameSite: "none"
     };
 
     return res
@@ -139,7 +140,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production"  // FIX: consistent with login
+        secure: true,
+        sameSite: "none"  // FIX: consistent with login
     };
 
     return res
@@ -168,7 +170,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production"
+            secure: true,
+            sameSite: "none"
         };
 
         const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshToken(user._id);
