@@ -33,3 +33,6 @@ npm run dev
 
 ## 👩‍💻 Author
 Zulal Saleem — Built 100% from scratch
+
+### Live API: https://zulal-backend.onrender.com
+### Frontend: https://zulal-frontend.vercel.app
